@@ -1,4 +1,4 @@
-import { Body, Post, Get, Route } from "tsoa";
+import { Body, Post, Get, Delete, Route } from "tsoa";
 import { ProductModel } from "../models/Product";
 import { JsonObject } from "swagger-ui-express";
 
@@ -8,6 +8,7 @@ export default class ProductController {
   public async create(
     @Body()
     body: {
+      id: string;
       name: String;
       category: String;
       price: Number;
@@ -16,6 +17,7 @@ export default class ProductController {
     }
   ): Promise<JsonObject> {
     const data = new ProductModel({
+      id: body.id,
       name: body.name,
       category: body.category,
       price: body.price,
@@ -47,6 +49,16 @@ export default class ProductController {
 
       const data = await ProductModel.find(filter);
       return data;
+    } catch (error) {
+      return { error };
+    }
+  }
+
+  @Delete("/:id")
+  public async delete(id: string): Promise<JsonObject> {
+    try {
+      const data = await ProductModel.findOneAndDelete({ id: { $eq: id } });
+      return { message: data };
     } catch (error) {
       return { error };
     }
