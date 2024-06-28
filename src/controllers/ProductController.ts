@@ -1,4 +1,4 @@
-import { Body, Post, Get, Delete, Route } from "tsoa";
+import { Body, Post, Get, Delete, Route, Patch } from "tsoa";
 import { ProductModel } from "../models/Product";
 import { JsonObject } from "swagger-ui-express";
 
@@ -49,6 +49,30 @@ export default class ProductController {
 
       const data = await ProductModel.find(filter);
       return data;
+    } catch (error) {
+      return { error };
+    }
+  }
+
+  @Patch("/:id")
+  public async update(
+    @Body()
+    body: {
+      id: string;
+      name: string;
+      category: string;
+      price: number;
+      active: boolean;
+    }
+  ): Promise<JsonObject> {
+    try {
+      const data = await ProductModel.findByIdAndUpdate(body.id, {
+        name: body.name,
+        category: body.category,
+        price: body.price,
+        active: body.active,
+      });
+      return { message: data };
     } catch (error) {
       return { error };
     }

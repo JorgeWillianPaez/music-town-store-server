@@ -22,8 +22,13 @@ router.get("/active", async (req: Request, res: Response) => {
   return res.status(200).send(response);
 });
 
+router.patch("", async (req: Request, res: Response) => {
+  const controller = new ProductController();
+  const response = await controller.update(req.body);
+  return res.status(204).send(response);
+});
+
 router.delete("/:id", async (req: Request, res: Response) => {
-  console.log(req.params.id);
   const controller = new ProductController();
   const response = await controller.delete(req.params.id);
   return res.status(204).send(response);
